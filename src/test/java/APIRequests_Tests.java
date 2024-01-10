@@ -5,6 +5,7 @@ import io.restassured.module.jsv.JsonSchemaValidator;
 import io.restassured.response.Response;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
+
 import org.hamcrest.Matchers;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -14,12 +15,18 @@ import utils.FileNameConstants;
 
 import java.io.File;
 import java.io.IOException;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
 
 public class APIRequests_Tests extends BaseTest {
-    String testUrl = "https://restful-booker.herokuapp.com/booking";
+
+    private static final Logger logger = LogManager.getLogger(APIRequests_Tests.class);
+
 
     @Test
     public void get_all_bookings()   {
+        logger.info("get_all_bookings Test Start");
         Response response =
         RestAssured
                 .given()
@@ -41,6 +48,7 @@ public class APIRequests_Tests extends BaseTest {
 
     @Test
     public void post_booking()  {
+        logger.info("post_booking Test Start");
         //prepare request body
         //1.use json object
         JSONObject booking = new JSONObject();
@@ -94,6 +102,7 @@ public class APIRequests_Tests extends BaseTest {
 
     @Test
     public void post_booking_file() throws IOException {
+        logger.info("post_booking_file Test Start");
         String post_body = FileUtils.readFileToString(new File(FileNameConstants.post_api_request_body), "UTF-8");
 
         Response response =
@@ -142,6 +151,7 @@ public class APIRequests_Tests extends BaseTest {
 
     @Test
     public void put_booking_request() throws IOException {
+        logger.info("put_booking_request Test Start");
         String post_body = FileUtils.readFileToString(new File(FileNameConstants.post_api_request_body), "UTF-8");
         String put_body = FileUtils.readFileToString(new File(FileNameConstants.put_api_request_body), "UTF-8");
         String token_body = FileUtils.readFileToString(new File(FileNameConstants.token_request), "UTF-8");
@@ -194,6 +204,7 @@ public class APIRequests_Tests extends BaseTest {
 
     @Test
     public void patch_booking_request ()  throws IOException {
+        logger.info("patch_booking_file Test Start");
         String post_body = FileUtils.readFileToString(new File(FileNameConstants.post_api_request_body), "UTF-8");
         //String put_body = FileUtils.readFileToString(new File(FileNameConstants.put_api_request_body), "UTF-8");
         String patch_body = FileUtils.readFileToString(new File(FileNameConstants.patch_api_request_body), "UTF-8");
@@ -248,6 +259,7 @@ public class APIRequests_Tests extends BaseTest {
     }
     @Test
     public void delete_booking() throws IOException{
+        logger.info("delete_booking_file Test Start");
         String token_body = FileUtils.readFileToString(new File(FileNameConstants.token_request), "UTF-8");
         String post_body = FileUtils.readFileToString(new File(FileNameConstants.post_api_request_body), "UTF-8");
         //POst first

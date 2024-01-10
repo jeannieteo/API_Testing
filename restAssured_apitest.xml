@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<suite name="API testing Suite">
+    <test thread-count="5" name="API booking Test">
+        <classes>
+            <class name="APIRequests_Tests">
+            </class>
+        </classes>
+    </test>
+</suite>
