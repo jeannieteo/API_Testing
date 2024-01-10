@@ -1,0 +1,11 @@
+{
+    "firstname": "Frodo",
+    "lastname": "Baggins",
+    "totalprice": 1098,
+    "depositpaid": true,
+    "bookingdates": {
+        "checkin": "2024-02-28",
+        "checkout": "2024-04-30"
+    },
+    "additionalneeds": "Burn the Ring"
+}
