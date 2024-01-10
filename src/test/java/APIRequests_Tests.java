@@ -173,21 +173,7 @@ public class APIRequests_Tests extends BaseTest {
                     .assertThat()
                         .statusCode(200);
         //generate Token
-        Response token_response =
-        RestAssured
-                .given()
-                    .contentType(ContentType.JSON)
-                    .body(token_body)
-                    .baseUri("https://restful-booker.herokuapp.com/auth")
-                .when()
-                    .post()
-                .then()
-                    .assertThat()
-                    .statusCode(200)
-                .extract()
-                    .response();
-
-        String tokenId = JsonPath.read(token_response.body().asString(), "$.token");
+        String tokenId = get_token(token_body);
         //PUT API request
 
         RestAssured
@@ -206,4 +192,123 @@ public class APIRequests_Tests extends BaseTest {
 
     }
 
+    @Test
+    public void patch_booking_request ()  throws IOException {
+        String post_body = FileUtils.readFileToString(new File(FileNameConstants.post_api_request_body), "UTF-8");
+        //String put_body = FileUtils.readFileToString(new File(FileNameConstants.put_api_request_body), "UTF-8");
+        String patch_body = FileUtils.readFileToString(new File(FileNameConstants.patch_api_request_body), "UTF-8");
+        String token_body = FileUtils.readFileToString(new File(FileNameConstants.token_request), "UTF-8");
+        //POST FIRST
+        Response response =
+                RestAssured
+                        .given()
+                        .contentType(ContentType.JSON)
+                        .body(post_body)
+                        .baseUri(testUrl)
+                        .when()
+                        .post()
+                        .then()
+                        .assertThat()
+                        .statusCode(200)
+                        .body("booking.firstname",Matchers.equalTo("Gandalf"))
+                        .extract()
+                        .response();
+        //Get the ID from the response
+        Integer bookingIDRetrieved = JsonPath.read(response.body().asString(),"$.bookingid");
+
+        //GET REQUEST
+        RestAssured
+                .given()
+                .contentType(ContentType.JSON)
+                .baseUri(testUrl)
+                .when()
+                .get("/{bookingId}", bookingIDRetrieved)
+                .then()
+                .assertThat()
+                .statusCode(200);
+        //generate Token
+
+        String tokenId = get_token(token_body);
+
+        //PUT API request
+
+        RestAssured
+                .given()
+                .baseUri(testUrl)
+                .contentType(ContentType.JSON)
+                .header("Cookie", "token=" + tokenId)
+                .body(patch_body)
+                .when()
+                .patch("{bookingId}", bookingIDRetrieved)
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .body("lastname", Matchers.equalTo("the Grey"));
+
+    }
+    @Test
+    public void delete_booking() throws IOException{
+        String token_body = FileUtils.readFileToString(new File(FileNameConstants.token_request), "UTF-8");
+        String post_body = FileUtils.readFileToString(new File(FileNameConstants.post_api_request_body), "UTF-8");
+        //POst first
+        Response response =
+                RestAssured
+                        .given()
+                        .contentType(ContentType.JSON)
+                        .body(post_body)
+                        .baseUri(testUrl)
+                        .when()
+                        .post()
+                        .then()
+                        .assertThat()
+                        .statusCode(200)
+                        .body("booking.firstname",Matchers.equalTo("Gandalf"))
+                        .extract()
+                        .response();
+        //Get the ID from the response
+        Integer bookingIDRetrieved = JsonPath.read(response.body().asString(),"$.bookingid");
+
+        //GET REQUEST
+        RestAssured
+                .given()
+                .contentType(ContentType.JSON)
+                .baseUri(testUrl)
+                .when()
+                .get("/{bookingId}", bookingIDRetrieved)
+                .then()
+                .assertThat()
+                .statusCode(200);
+        //generate Token
+
+        String token = get_token(token_body);
+        RestAssured
+                .given()
+                .contentType(ContentType.JSON)
+                .header("Cookie", "token="+token)
+                .baseUri(testUrl)
+                .when()
+                .delete("/{bookingId}", bookingIDRetrieved)
+                .then()
+                .assertThat()
+                .statusCode(201);
+    }
+
+    public String get_token(String token_body) {
+        //generate Token
+        Response token_response =
+                RestAssured
+                        .given()
+                        .contentType(ContentType.JSON)
+                        .body(token_body)
+                        .baseUri("https://restful-booker.herokuapp.com/auth")
+                        .when()
+                        .post()
+                        .then()
+                        .assertThat()
+                        .statusCode(200)
+                        .extract()
+                        .response();
+        return JsonPath.read(token_response.body().asString(), "$.token");
+
+    }
 }
