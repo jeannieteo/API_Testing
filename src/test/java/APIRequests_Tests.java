@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import utils.RestAssuredListener;
 
 
 public class APIRequests_Tests extends BaseTest {
@@ -29,7 +30,7 @@ public class APIRequests_Tests extends BaseTest {
         logger.info("get_all_bookings Test Start");
         Response response =
         RestAssured
-                .given()
+                .given().filter(new RestAssuredListener())
                     .contentType(ContentType.JSON)
                     .baseUri(testUrl)
                     //.log().headers() //log body to console
@@ -67,7 +68,7 @@ public class APIRequests_Tests extends BaseTest {
         //do rest
         Response response =
         RestAssured
-                .given()
+                .given().filter(new RestAssuredListener())
                     .contentType(ContentType.JSON)
                     .body(booking.toString())
                     .baseUri(testUrl)
@@ -86,7 +87,7 @@ public class APIRequests_Tests extends BaseTest {
         int bookingId = response.path("bookingid");
         //pass the bookid from the response body to another API
         RestAssured
-                .given()
+                .given().filter(new RestAssuredListener())
                     .contentType(ContentType.JSON)
                     .pathParams("bookingID", bookingId)
                     .baseUri(testUrl)
@@ -107,7 +108,7 @@ public class APIRequests_Tests extends BaseTest {
 
         Response response =
         RestAssured
-                .given()
+                .given().filter(new RestAssuredListener())
                     .contentType(ContentType.JSON)
                     .body(post_body)
                     .baseUri(testUrl)
@@ -138,7 +139,7 @@ public class APIRequests_Tests extends BaseTest {
         String jsonSchema = FileUtils.readFileToString(new File(FileNameConstants.booking_schema), "UTF-8");
 
         RestAssured
-                .given()
+                .given().filter(new RestAssuredListener())
                     .contentType(ContentType.JSON)
                     .baseUri(testUrl)
                 .when()
@@ -158,7 +159,7 @@ public class APIRequests_Tests extends BaseTest {
         //POST FIRST
         Response response =
                 RestAssured
-                        .given()
+                        .given().filter(new RestAssuredListener())
                         .contentType(ContentType.JSON)
                         .body(post_body)
                         .baseUri(testUrl)
@@ -174,7 +175,7 @@ public class APIRequests_Tests extends BaseTest {
         Integer bookingIDRetrieved = JsonPath.read(response.body().asString(),"$.bookingid");
         //GET REQUEST
         RestAssured
-                .given()
+                .given().filter(new RestAssuredListener())
                     .contentType(ContentType.JSON)
                     .baseUri(testUrl)
                 .when()
@@ -187,7 +188,7 @@ public class APIRequests_Tests extends BaseTest {
         //PUT API request
 
         RestAssured
-                .given()
+                .given().filter(new RestAssuredListener())
                     .baseUri(testUrl)
                     .contentType(ContentType.JSON)
                     .header("Cookie", "token=" +tokenId)
@@ -212,7 +213,7 @@ public class APIRequests_Tests extends BaseTest {
         //POST FIRST
         Response response =
                 RestAssured
-                        .given()
+                        .given().filter(new RestAssuredListener())
                         .contentType(ContentType.JSON)
                         .body(post_body)
                         .baseUri(testUrl)
@@ -229,7 +230,7 @@ public class APIRequests_Tests extends BaseTest {
 
         //GET REQUEST
         RestAssured
-                .given()
+                .given().filter(new RestAssuredListener())
                 .contentType(ContentType.JSON)
                 .baseUri(testUrl)
                 .when()
@@ -244,7 +245,7 @@ public class APIRequests_Tests extends BaseTest {
         //PUT API request
 
         RestAssured
-                .given()
+                .given().filter(new RestAssuredListener())
                 .baseUri(testUrl)
                 .contentType(ContentType.JSON)
                 .header("Cookie", "token=" + tokenId)
@@ -265,7 +266,7 @@ public class APIRequests_Tests extends BaseTest {
         //POst first
         Response response =
                 RestAssured
-                        .given()
+                        .given().filter(new RestAssuredListener())
                         .contentType(ContentType.JSON)
                         .body(post_body)
                         .baseUri(testUrl)
@@ -282,7 +283,7 @@ public class APIRequests_Tests extends BaseTest {
 
         //GET REQUEST
         RestAssured
-                .given()
+                .given().filter(new RestAssuredListener())
                 .contentType(ContentType.JSON)
                 .baseUri(testUrl)
                 .when()
@@ -294,7 +295,7 @@ public class APIRequests_Tests extends BaseTest {
 
         String token = get_token(token_body);
         RestAssured
-                .given()
+                .given().filter(new RestAssuredListener())
                 .contentType(ContentType.JSON)
                 .header("Cookie", "token="+token)
                 .baseUri(testUrl)
@@ -309,7 +310,7 @@ public class APIRequests_Tests extends BaseTest {
         //generate Token
         Response token_response =
                 RestAssured
-                        .given()
+                        .given().filter(new RestAssuredListener())
                         .contentType(ContentType.JSON)
                         .body(token_body)
                         .baseUri("https://restful-booker.herokuapp.com/auth")
