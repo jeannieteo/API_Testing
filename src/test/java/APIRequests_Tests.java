@@ -1,4 +1,6 @@
 import com.jayway.jsonpath.JsonPath;
+import io.qameta.allure.*;
+import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.module.jsv.JsonSchemaValidator;
@@ -10,27 +12,35 @@ import org.hamcrest.Matchers;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.apache.commons.io.FileUtils;
+
 import utils.BaseTest;
 import utils.FileNameConstants;
+import utils.RestAssuredListener;
 
 import java.io.File;
 import java.io.IOException;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
-import utils.RestAssuredListener;
 
 
+@Epic("Epic-01")
+@Feature("tests for Booking API - post for create booking, get to retrieve booking, delete booking and put/patch for edit booking")
 public class APIRequests_Tests extends BaseTest {
 
     private static final Logger logger = LogManager.getLogger(APIRequests_Tests.class);
 
 
     @Test
+    @Story("User can rerieve all booking ids")
+    @Description("Get all bookings id")
+    @Severity(SeverityLevel.NORMAL)
     public void get_all_bookings()   {
         logger.info("get_all_bookings Test Start");
         Response response =
         RestAssured
-                .given().filter(new RestAssuredListener())
+                .given()
+                    .filter(new AllureRestAssured())
+                    .filter(new RestAssuredListener())
                     .contentType(ContentType.JSON)
                     .baseUri(testUrl)
                     //.log().headers() //log body to console
@@ -48,6 +58,9 @@ public class APIRequests_Tests extends BaseTest {
     }
 
     @Test
+    @Story("User can make a booking")
+    @Description("Post API for insert a booking")
+    @Severity(SeverityLevel.CRITICAL)
     public void post_booking()  {
         logger.info("post_booking Test Start");
         //prepare request body
@@ -68,7 +81,9 @@ public class APIRequests_Tests extends BaseTest {
         //do rest
         Response response =
         RestAssured
-                .given().filter(new RestAssuredListener())
+                .given()
+                    .filter(new AllureRestAssured())
+                    .filter(new RestAssuredListener())
                     .contentType(ContentType.JSON)
                     .body(booking.toString())
                     .baseUri(testUrl)
@@ -87,7 +102,9 @@ public class APIRequests_Tests extends BaseTest {
         int bookingId = response.path("bookingid");
         //pass the bookid from the response body to another API
         RestAssured
-                .given().filter(new RestAssuredListener())
+                .given()
+                    .filter(new AllureRestAssured())
+                    .filter(new RestAssuredListener())
                     .contentType(ContentType.JSON)
                     .pathParams("bookingID", bookingId)
                     .baseUri(testUrl)
@@ -102,13 +119,19 @@ public class APIRequests_Tests extends BaseTest {
     }
 
     @Test
+    @Story("User can make a booking 2")
+    @Description("Post API for insert a booking 2")
+    @Severity(SeverityLevel.CRITICAL)
     public void post_booking_file() throws IOException {
         logger.info("post_booking_file Test Start");
+        //2.use file to pass
         String post_body = FileUtils.readFileToString(new File(FileNameConstants.post_api_request_body), "UTF-8");
 
         Response response =
         RestAssured
-                .given().filter(new RestAssuredListener())
+                .given()
+                    .filter(new AllureRestAssured())
+                    .filter(new RestAssuredListener())
                     .contentType(ContentType.JSON)
                     .body(post_body)
                     .baseUri(testUrl)
@@ -139,7 +162,9 @@ public class APIRequests_Tests extends BaseTest {
         String jsonSchema = FileUtils.readFileToString(new File(FileNameConstants.booking_schema), "UTF-8");
 
         RestAssured
-                .given().filter(new RestAssuredListener())
+                .given()
+                    .filter(new AllureRestAssured())
+                    .filter(new RestAssuredListener())
                     .contentType(ContentType.JSON)
                     .baseUri(testUrl)
                 .when()
@@ -151,6 +176,9 @@ public class APIRequests_Tests extends BaseTest {
     }
 
     @Test
+    @Story("User can change a booking")
+    @Description("Put API for changing a booking")
+    @Severity(SeverityLevel.NORMAL)
     public void put_booking_request() throws IOException {
         logger.info("put_booking_request Test Start");
         String post_body = FileUtils.readFileToString(new File(FileNameConstants.post_api_request_body), "UTF-8");
@@ -159,7 +187,9 @@ public class APIRequests_Tests extends BaseTest {
         //POST FIRST
         Response response =
                 RestAssured
-                        .given().filter(new RestAssuredListener())
+                        .given()
+                        .filter(new RestAssuredListener())
+                        .filter(new AllureRestAssured())
                         .contentType(ContentType.JSON)
                         .body(post_body)
                         .baseUri(testUrl)
@@ -175,7 +205,9 @@ public class APIRequests_Tests extends BaseTest {
         Integer bookingIDRetrieved = JsonPath.read(response.body().asString(),"$.bookingid");
         //GET REQUEST
         RestAssured
-                .given().filter(new RestAssuredListener())
+                .given()
+                    .filter(new RestAssuredListener())
+                    .filter(new AllureRestAssured())
                     .contentType(ContentType.JSON)
                     .baseUri(testUrl)
                 .when()
@@ -188,7 +220,9 @@ public class APIRequests_Tests extends BaseTest {
         //PUT API request
 
         RestAssured
-                .given().filter(new RestAssuredListener())
+                .given()
+                    .filter(new RestAssuredListener())
+                    .filter(new AllureRestAssured())
                     .baseUri(testUrl)
                     .contentType(ContentType.JSON)
                     .header("Cookie", "token=" +tokenId)
@@ -204,6 +238,9 @@ public class APIRequests_Tests extends BaseTest {
     }
 
     @Test
+    @Story("User can edit a booking")
+    @Description("Patch API for changing a booking")
+    @Severity(SeverityLevel.NORMAL)
     public void patch_booking_request ()  throws IOException {
         logger.info("patch_booking_file Test Start");
         String post_body = FileUtils.readFileToString(new File(FileNameConstants.post_api_request_body), "UTF-8");
@@ -213,7 +250,9 @@ public class APIRequests_Tests extends BaseTest {
         //POST FIRST
         Response response =
                 RestAssured
-                        .given().filter(new RestAssuredListener())
+                        .given()
+                        .filter(new RestAssuredListener())
+                        .filter(new AllureRestAssured())
                         .contentType(ContentType.JSON)
                         .body(post_body)
                         .baseUri(testUrl)
@@ -230,7 +269,9 @@ public class APIRequests_Tests extends BaseTest {
 
         //GET REQUEST
         RestAssured
-                .given().filter(new RestAssuredListener())
+                .given()
+                .filter(new RestAssuredListener())
+                .filter(new AllureRestAssured())
                 .contentType(ContentType.JSON)
                 .baseUri(testUrl)
                 .when()
@@ -245,7 +286,9 @@ public class APIRequests_Tests extends BaseTest {
         //PUT API request
 
         RestAssured
-                .given().filter(new RestAssuredListener())
+                .given()
+                .filter(new RestAssuredListener())
+                .filter(new AllureRestAssured())
                 .baseUri(testUrl)
                 .contentType(ContentType.JSON)
                 .header("Cookie", "token=" + tokenId)
@@ -259,6 +302,9 @@ public class APIRequests_Tests extends BaseTest {
 
     }
     @Test
+    @Story("User can delete a booking")
+    @Description("Delete API for remove a booking")
+    @Severity(SeverityLevel.CRITICAL)
     public void delete_booking() throws IOException{
         logger.info("delete_booking_file Test Start");
         String token_body = FileUtils.readFileToString(new File(FileNameConstants.token_request), "UTF-8");
@@ -266,7 +312,9 @@ public class APIRequests_Tests extends BaseTest {
         //POst first
         Response response =
                 RestAssured
-                        .given().filter(new RestAssuredListener())
+                        .given()
+                        .filter(new RestAssuredListener())
+                        .filter(new AllureRestAssured())
                         .contentType(ContentType.JSON)
                         .body(post_body)
                         .baseUri(testUrl)
@@ -283,7 +331,9 @@ public class APIRequests_Tests extends BaseTest {
 
         //GET REQUEST
         RestAssured
-                .given().filter(new RestAssuredListener())
+                .given()
+                .filter(new AllureRestAssured())
+                .filter(new RestAssuredListener())
                 .contentType(ContentType.JSON)
                 .baseUri(testUrl)
                 .when()
@@ -295,7 +345,9 @@ public class APIRequests_Tests extends BaseTest {
 
         String token = get_token(token_body);
         RestAssured
-                .given().filter(new RestAssuredListener())
+                .given()
+                .filter(new AllureRestAssured())
+                .filter(new RestAssuredListener())
                 .contentType(ContentType.JSON)
                 .header("Cookie", "token="+token)
                 .baseUri(testUrl)
@@ -310,7 +362,9 @@ public class APIRequests_Tests extends BaseTest {
         //generate Token
         Response token_response =
                 RestAssured
-                        .given().filter(new RestAssuredListener())
+                        .given()
+                        .filter(new AllureRestAssured())
+                        .filter(new RestAssuredListener())
                         .contentType(ContentType.JSON)
                         .body(token_body)
                         .baseUri("https://restful-booker.herokuapp.com/auth")
