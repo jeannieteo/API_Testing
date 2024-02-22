@@ -17,3 +17,6 @@ How to put allure in your system
 https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/
 2. Unzip into folder and copy pathname of bin.
 3. add pathname to $Path environment variable.
+
+| TCID     | Model   | Title | HttpRequest | Request | Body | Response | Status Code |
+| -------- | ------- | ----- | ----------- | ------- |----- | -------- | ----------- |
