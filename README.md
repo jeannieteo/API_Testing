@@ -6,11 +6,11 @@ REST Assured API Automation Framework
 5. allure report 
 
 How to execute tests:
-mvn clean test
-or 
-mvn clean test -Dsuitefilename="restAssured_apitest.xml"
-then 
-allure serve
+<br> mvn clean test
+<br> or 
+<br> mvn clean test -Dsuitefilename="restAssured_apitest.xml"
+<br> then 
+<br> allure serve
 
 How to put allure in your system
 1. Download zip file
